@@ -127,6 +127,6 @@ void WorldcoinClient::value(String value) {
   }
 
   if (currentKey == "Price") {
-    currentValue = value;
+    currentValue = String(value.toDouble(), 3);
   }
 }
