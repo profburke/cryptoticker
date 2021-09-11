@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include <SSD1306Wire.h>
 #include <OLEDDisplayUi.h>
 
 void drawDateTime(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
@@ -14,5 +13,3 @@ void drawHeaderOverlay(OLEDDisplay *display, OLEDDisplayUiState* state);
 void drawProgress(OLEDDisplay *display, int percentage, String label);
 void updateData(OLEDDisplay *display);
 void setReadyForUpdate();
-
-

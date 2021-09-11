@@ -9,15 +9,10 @@ extern String currentCurrency;
 void drawDateTime(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->setTextAlignment(TEXT_ALIGN_CENTER);
   display->setFont(ArialMT_Plain_10);
-//  String date = wunderground.getDate();
   String date = "99/99/9999";
   int textWidth = display->getStringWidth(date);
   display->drawString(64 + x, 5 + y, date);
   display->setFont(ArialMT_Plain_24);
-//  String time = timeClient.getFormattedTime();
-//  textWidth = display->getStringWidth(time);
-//  display->drawString(64 + x, 15 + y, time);
-//  display->setTextAlignment(TEXT_ALIGN_LEFT);
 }
 
 void drawCurrency0(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
@@ -64,7 +59,6 @@ void drawProgress(OLEDDisplay *display, int percentage, String label) {
 void updateData(OLEDDisplay *display) {
   Serial.println("executing updateData");
   drawProgress(display, 30, "Updating time...");
-//  timeClient.updateTime();
   drawProgress(display, 50, "Updating price indices...");
   worldcoin.update(APIKEY);
   drawProgress(display, 80, "Updating SOMETHING ELSE...");
@@ -77,4 +71,3 @@ void setReadyForUpdate() {
   Serial.println("Setting readyForUpdate to true");
   readyForUpdate = true;
 }
-

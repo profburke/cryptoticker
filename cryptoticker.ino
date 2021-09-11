@@ -6,9 +6,10 @@
 #include "WorldcoinClient.h"
 #include "frames.h"
 
-const char *WIFI_SSID = "";
-const char *WIFI_PWD = "";
-const char  *APIKEY = "";
+// Defines WIFI_SSID, WIFI_PWD, APIKEY as const char *
+// secrets.h is in .gitignore so we don't commit these values.
+#include "secrets.h"
+
 const int UPDATE_INTERVAL_SECS = 10 * 60; // Update every 10 minutes
 const int I2C_DISPLAY_ADDRESS = 0x3c;
 const int SDA_PIN = D3;
@@ -85,4 +86,3 @@ void loop() {
     delay(remainingTimeBudget);
   }
 }
-

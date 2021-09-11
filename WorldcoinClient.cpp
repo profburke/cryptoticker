@@ -7,7 +7,6 @@
 #include "WorldcoinClient.h"
 
 const char *host = "www.worldcoinindex.com";
-//const int httpsPort = 443;
 
 WorldcoinClient::WorldcoinClient() {
   for (int i = 0; i < numCurrencies; i++) {
@@ -44,8 +43,7 @@ void WorldcoinClient::update(String apiKey) {
   HTTPClient https;
 
   String url = "https://" + String(host) + "/apiservice/ticker?key=" + apiKey + "&label=ethbtc-ltcbtc-xmrbtc-btcbtc&fiat=usd";
-  Serial.print("Requesting URL: ");
-  Serial.println(url);
+  Serial.println("Requesting URL: " + url);
 
   if (https.begin(*client, url)) {
     int httpCode = https.GET();
