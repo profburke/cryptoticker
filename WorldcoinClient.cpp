@@ -1,9 +1,13 @@
-#include <ESP8266WiFi.h>                                                                                          
-#include <WiFiClientSecure.h>                                                                                           
-#include "WorldcoinClient.h"  
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
+
+#include "WorldcoinClient.h"
 
 const char *host = "www.worldcoinindex.com";
-const int httpsPort = 443;
+//const int httpsPort = 443;
 
 WorldcoinClient::WorldcoinClient() {
   for (int i = 0; i < numCurrencies; i++) {
@@ -34,53 +38,31 @@ String WorldcoinClient::getCurrencyValue(int i) {
 void WorldcoinClient::update(String apiKey) {
   JsonStreamingParser parser;
   parser.setListener(this);
-  WiFiClientSecure client;
 
-  Serial.print("Connecting to ");
-  Serial.println(host);
-  if (!client.connect(host, httpsPort)) {                                                        
-    Serial.println("connection failed");                                                                          
-    return;                                                                                                       
-  }                                                                                                               
+  std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+  client->setInsecure();
+  HTTPClient https;
 
-  Serial.print("API KEY: ");
-  Serial.println(apiKey);
-  String url = "/apiservice/json?key=" + apiKey;
-  Serial.print("Requesting URL: ");                                                                               
-  Serial.println(url);                                                                                            
-                                                                                                                  
-  // This will send the request to the server                                                                     
-  client.print(String("GET ") + url + " HTTP/1.1\r\n" +                                                           
-               "Host: " + host + "\r\n" + 
-               "User-Agent: ct 1.0\r\n" +                                                                
-               "Connection: close\r\n\r\n");                                                                      
-  
-  int retryCounter = 0;                                                                                           
-  while(!client.available()) {                                                                                    
-    delay(1000);                                                                                                  
-    retryCounter++;                                                                                               
-    if (retryCounter > 10) {                                                                                      
-      return;                                                                                                     
-    }                                                                                                             
+  String url = "https://" + String(host) + "/apiservice/ticker?key=" + apiKey + "&label=ethbtc-ltcbtc-xmrbtc-btcbtc&fiat=usd";
+  Serial.print("Requesting URL: ");
+  Serial.println(url);
+
+  if (https.begin(*client, url)) {
+    int httpCode = https.GET();
+
+    Serial.printf("[HTTPS] GET ... code: %d\n", httpCode);
+
+    if (httpCode > 0) {
+      if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+        String payload = https.getString();
+        for (int i = 0; i < payload.length(); i++) {
+          parser.parse(payload.charAt(i));
+        }
+      }
+    }
   }
 
-  int pos = 0;                                                                                                    
-  boolean isBody = false;                                                                                         
-  char c;                                                                                                         
-                                                                                                                  
-  int size = 0;                                                                                                   
-  client.setNoDelay(false);                                                                                       
-  while(client.connected()) {                                                                                     
-    while((size = client.available()) > 0) {                                                                      
-      c = client.read();
-      if (c == '{' || c == '[') {                                                                                 
-        isBody = true;                                                                                            
-      }                                                                                                           
-      if (isBody) {                                                                                               
-        parser.parse(c);                                                                                          
-      }                                                                                                           
-    }                                                                                                             
-  }                  
+  // dealloc client?
 }
 
 int WorldcoinClient::findName(String candidate) {
@@ -130,10 +112,12 @@ void WorldcoinClient::whitespace(char c) {
 }
 
 void WorldcoinClient::key(String key) {
+  Serial.println("key: " + key);
   currentKey = String(key);
 }
 
 void WorldcoinClient::value(String value) {
+  Serial.println("value: " + value);
   if (currentKey == "Name") {
     currentName = value;
   }
@@ -142,9 +126,7 @@ void WorldcoinClient::value(String value) {
     currentSymbol = value;
   }
 
-  if (currentKey == "Price_usd") {
+  if (currentKey == "Price") {
     currentValue = value;
   }
 }
-
-
