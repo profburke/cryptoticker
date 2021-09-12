@@ -16,7 +16,7 @@ const int SDA_PIN = D3;
 const int SDC_PIN = D5;
 
 SSD1306Wire     display(I2C_DISPLAY_ADDRESS, SDA_PIN, SDC_PIN);
-OLEDDisplayUi   ui( &display );
+OLEDDisplayUi   ui(&display);
 WorldcoinClient worldcoin;
 Ticker ticker;
 
@@ -30,40 +30,10 @@ OverlayCallback overlays[] = { drawHeaderOverlay };
 int numberOfOverlays = 1;
 
 void setup() {
-  Serial.begin(115200);
-  Serial.println();
-  Serial.println();
-
-  display.init();
-  display.clear();
-  display.display();
-
-  display.setFont(ArialMT_Plain_10);
-  display.setTextAlignment(TEXT_ALIGN_CENTER);
-  display.setContrast(255);
-
-  WiFi.begin(WIFI_SSID, WIFI_PWD);
-
-  Serial.print("Connecting");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.println(worldcoin.getCurrency(0).getName() + ": " + worldcoin.getCurrency(0).getValue());
-
-  ui.setTargetFPS(30);
-
-//  ui.setActiveSymbol(activeSymbole);
-//  ui.setInactiveSymbol(inactiveSymbole);
-
-  ui.setIndicatorPosition(BOTTOM);
-  ui.setIndicatorDirection(LEFT_RIGHT);
-  ui.setFrameAnimation(SLIDE_LEFT);
-  ui.setFrames(frames, numberOfFrames);
-
-  ui.setOverlays(overlays, numberOfOverlays);
-  ui.init();
+  initializeSerial();
+  initializeDisplay();
+  initializeUI();
+  initializeWiFi();  
 
   updateData(&display);
 
@@ -82,4 +52,51 @@ void loop() {
     // Don't do stuff if you are below your time budget.
     delay(remainingTimeBudget);
   }
+}
+
+// Subsystem Initialization
+
+void initializeSerial() {
+  Serial.begin(115200);
+  Serial.println();
+  Serial.println();
+  Serial.println();
+
+  Serial.println("Begin serial logging...");
+}
+
+void initializeDisplay() {
+  display.init();
+  display.clear();
+  display.display();
+
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setContrast(255);
+}
+
+void initializeUI() {
+    ui.setTargetFPS(30);
+
+//  ui.setActiveSymbol(activeSymbole);
+//  ui.setInactiveSymbol(inactiveSymbole);
+
+  ui.setIndicatorPosition(BOTTOM);
+  ui.setIndicatorDirection(LEFT_RIGHT);
+  ui.setFrameAnimation(SLIDE_LEFT);
+  ui.setFrames(frames, numberOfFrames);
+
+  ui.setOverlays(overlays, numberOfOverlays);
+  ui.init();
+}
+
+void initializeWiFi() {
+  WiFi.begin(WIFI_SSID, WIFI_PWD);
+
+  Serial.print("Connecting");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
 }
