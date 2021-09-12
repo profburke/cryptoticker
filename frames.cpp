@@ -15,20 +15,35 @@ void drawDateTime(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, in
   display->setFont(ArialMT_Plain_24);
 }
 
+/*
+ * Between the next several functions and the names, symbols, values arrays in WorldcoinClient
+ * you'd think this was written in BASIC, not C++. Now that I've gotten past some getting up
+ * to speed with Arduino/ESP8266 development, it's time to work on improving the code.
+ *
+ * However...
+ *
+ * Made an initial refactoring here where I only had two frame functions, one to draw the date/time
+ * and one for each of the four currency frames. The idea being to pull the frame out of the 
+ * OLEDDisplayUIState object and from there decide which currency to display.  However, there
+ * is some weirdness with when the frame functions are being called during updates that results
+ * in the wrong currency being displayed while the text is "scrolling" into place... so I've
+ * undone those changes and will work on some other things while I take a little time to trace
+ * through the display library.
+ */
 void drawCurrency0(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
-  drawCurrency(display, state, x, y, worldcoin.getCurrencySymbol(0), worldcoin.getCurrencyValue(0));
+  drawCurrency(display, state, x, y, worldcoin.getCurrency(0).getSymbol(), worldcoin.getCurrency(0).getValue());
 }
 
 void drawCurrency1(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
-  drawCurrency(display, state, x, y, worldcoin.getCurrencySymbol(1), worldcoin.getCurrencyValue(1));
+  drawCurrency(display, state, x, y, worldcoin.getCurrency(1).getSymbol(), worldcoin.getCurrency(1).getValue());
 }
 
 void drawCurrency2(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
-  drawCurrency(display, state, x, y, worldcoin.getCurrencySymbol(2), worldcoin.getCurrencyValue(2));
+  drawCurrency(display, state, x, y, worldcoin.getCurrency(2).getSymbol(), worldcoin.getCurrency(2).getValue());
 }
 
 void drawCurrency3(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
-  drawCurrency(display, state, x, y, worldcoin.getCurrencySymbol(3), worldcoin.getCurrencyValue(3));
+  drawCurrency(display, state, x, y, worldcoin.getCurrency(3).getSymbol(), worldcoin.getCurrency(3).getValue());
 }
 
 void drawCurrency(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y, String symbol, String price) {

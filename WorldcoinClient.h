@@ -4,6 +4,8 @@
 #include <JsonListener.h>
 #include <JsonStreamingParser.h>
 
+#include "Currency.h"
+
 class WorldcoinClient: public JsonListener {
   private:
     String currentKey;
@@ -12,21 +14,14 @@ class WorldcoinClient: public JsonListener {
     String currentValue;
 
     static const int numCurrencies = 4;
-    String names[numCurrencies];
-    String symbols[numCurrencies];
-    String values[numCurrencies];
+    Currency currencies[numCurrencies];
 
     int findName(String candidate);
 
   public:
-
     WorldcoinClient();
-
     void update(String apiKey);
-
-    String getCurrencyName(int index);
-    String getCurrencySymbol(int index);
-    String getCurrencyValue(int index);
+    Currency getCurrency(int index);
 
     // do these need to be public?
     virtual void startDocument();                                                                                 
@@ -42,4 +37,3 @@ class WorldcoinClient: public JsonListener {
     virtual void key(String key);                                                                                 
     virtual void value(String value);                                                                             
 };
-

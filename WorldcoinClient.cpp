@@ -9,29 +9,14 @@
 const char *host = "www.worldcoinindex.com";
 
 WorldcoinClient::WorldcoinClient() {
-  for (int i = 0; i < numCurrencies; i++) {
-    values[i] = "n/a";
-  }
-  names[0] = "Bitcoin";
-  names[1] = "Ethereum";
-  names[2] = "Litecoin";
-  names[3] = "Monero";
-  symbols[0] = "BTC";
-  symbols[1] = "ETH";
-  symbols[2] = "LTC";
-  symbols[3] = "XMR";
+  currencies[0] = Currency("Bitcoin", "BTC", "n/a");
+  currencies[1] = Currency("Ethereum", "ETH", "n/a");
+  currencies[2] = Currency("Litecoin", "LTC", "n/a");
+  currencies[3] = Currency("Monero", "XMR", "n/a");
 }
 
-String WorldcoinClient::getCurrencyName(int i) {
-  return names[i];
-}
-
-String WorldcoinClient::getCurrencySymbol(int i) {
-  return symbols[i];
-}
-
-String WorldcoinClient::getCurrencyValue(int i) {
-  return values[i];
+Currency WorldcoinClient::getCurrency(int index) {
+  return currencies[index];
 }
 
 void WorldcoinClient::update(String apiKey) {
@@ -66,7 +51,7 @@ void WorldcoinClient::update(String apiKey) {
 int WorldcoinClient::findName(String candidate) {
   int result = -1;
   for (int i = 0; i < numCurrencies; i ++) {
-    if (candidate == names[i]) {
+    if (candidate == currencies[i].getName()) {
       result = i;
       break;
     }
@@ -93,7 +78,7 @@ void WorldcoinClient::startObject() {
 void WorldcoinClient::endObject() {
   int index = findName(currentName);
   if (index > -1) {
-    values[index] = currentValue;
+    currencies[index] = Currency(currentName, currentSymbol, currentValue);
   }
 }
 

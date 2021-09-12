@@ -50,10 +50,7 @@ void setup() {
     Serial.print(".");
   }
   Serial.println("");
-
-  Serial.print(worldcoin.getCurrencyName(0));
-  Serial.print(": ");
-  Serial.println(worldcoin.getCurrencyValue(0));
+  Serial.println(worldcoin.getCurrency(0).getName() + ": " + worldcoin.getCurrency(0).getValue());
 
   ui.setTargetFPS(30);
 
