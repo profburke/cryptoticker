@@ -15,13 +15,16 @@ class WorldcoinClient: public JsonListener {
 
     static const int numCurrencies = 4;
     Currency currencies[numCurrencies];
-
+    String mostRecentUpdate;
+    
     int findName(String candidate);
 
   public:
     WorldcoinClient();
     void update(String apiKey);
     Currency getCurrency(int index);
+
+    String getMRU();
 
     // do these need to be public?
     virtual void startDocument();                                                                                 

@@ -76,10 +76,10 @@ void initializeDisplay() {
 }
 
 void initializeUI() {
-    ui.setTargetFPS(30);
+  ui.setTargetFPS(30);
 
-//  ui.setActiveSymbol(activeSymbole);
-//  ui.setInactiveSymbol(inactiveSymbole);
+  // ui.setActiveSymbol(activeSymbole);
+  // ui.setInactiveSymbol(inactiveSymbole);
 
   ui.setIndicatorPosition(BOTTOM);
   ui.setIndicatorDirection(LEFT_RIGHT);

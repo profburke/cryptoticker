@@ -9,6 +9,7 @@
 const char *host = "www.worldcoinindex.com";
 
 WorldcoinClient::WorldcoinClient() {
+  mostRecentUpdate = "";
   currencies[0] = Currency("Bitcoin", "BTC", "n/a");
   currencies[1] = Currency("Ethereum", "ETH", "n/a");
   currencies[2] = Currency("Litecoin", "LTC", "n/a");
@@ -31,12 +32,21 @@ void WorldcoinClient::update(String apiKey) {
   Serial.println("Requesting URL: " + url);
 
   if (https.begin(*client, url)) {
+
+    const char* headerKeys[] = {"date"};
+    https.collectHeaders(headerKeys, 1);
+    
     int httpCode = https.GET();
 
     Serial.printf("[HTTPS] GET ... code: %d\n", httpCode);
 
     if (httpCode > 0) {
       if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+
+        if (https.hasHeader("date")) {
+          mostRecentUpdate = https.header("date");
+        }
+        
         String payload = https.getString();
         for (int i = 0; i < payload.length(); i++) {
           parser.parse(payload.charAt(i));
@@ -46,6 +56,10 @@ void WorldcoinClient::update(String apiKey) {
   }
 
   // dealloc client?
+}
+
+String WorldcoinClient::getMRU() {
+  return mostRecentUpdate;
 }
 
 int WorldcoinClient::findName(String candidate) {

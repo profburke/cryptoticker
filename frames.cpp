@@ -8,11 +8,17 @@ extern String currentCurrency;
 
 void drawDateTime(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->setTextAlignment(TEXT_ALIGN_CENTER);
-  display->setFont(ArialMT_Plain_10);
-  String date = "99/99/9999";
-  int textWidth = display->getStringWidth(date);
+  display->setFont(ArialMT_Plain_16);
+
+  // According to specs for HTTP date header, the various fields are all
+  // fixed width; e.g.
+  // Tue, 14 Sep 2021 13:39:24 GMT
+  // So we can hard code the indices for substring...
+  String date = worldcoin.getMRU().substring(0, 16);
+  String time = worldcoin.getMRU().substring(17);
+  
   display->drawString(64 + x, 5 + y, date);
-  display->setFont(ArialMT_Plain_24);
+  display->drawString(64 + x, 20 + y, time);
 }
 
 /*
