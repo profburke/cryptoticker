@@ -11,15 +11,14 @@ I had plans for various customization, but made some code changes that resulted 
 
 Recently I decided to repo the ESP8266 for a different project, so I've reverted to a working commit, cleaned it up just a bit, and am releasing it. If I had released this back in 2017...I'd still not be a millionaire :P
 
-
 <br clear="all">
 
 ### Possible Enhancements
 
 - Run a webserver on the device that would allow you to connect and
 
- - customize which currencies to display
- - change prices from USD to GBP, JPY, etc.
+  - customize which currencies to display
+  - change prices from USD to GBP, JPY, etc.
  
 - change the display to a true ticker and/or add fancier transitions
  
